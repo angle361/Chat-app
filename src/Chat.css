@@ -1,5 +1,5 @@
 .chat{
-    flex: 0.65;
+    flex: 0.70;
     display: flex;
     flex-direction: column;
 }
@@ -27,6 +27,11 @@
 }
 .chat_headerRight > .MuiSvgIcon-root{
     color:gray;
+}
+.chat>img{
+    object-fit: contain;
+    height: 300px;
+    margin-top: 18%;
 }
 .chat_body{
     background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
@@ -88,4 +93,13 @@
 .chat_footer > .MuiSvgIcon-root{
     padding: 10px;
     color: gray;
+}
+aside.emoji-picker-react{
+    position:absolute !important;
+    bottom:120px;
+}
+@media (max-width: 786px) {
+    .chat{
+      display: none;
+    }
 }

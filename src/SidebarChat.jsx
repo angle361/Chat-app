@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Avatar, IconButton } from "@material-ui/core";
 import db from './Firebase';
 import { Link } from "react-router-dom";
+import { Button } from "@material-ui/core";
 
 
 function SidebarChat({ id,name,addNewChat}){
@@ -35,6 +36,11 @@ function SidebarChat({ id,name,addNewChat}){
             }
         }
     }
+    const deleteRoom = () => {
+        if(id){
+            db.collection('rooms').doc(id).delete();
+        }
+    }
 
    // console.log(name);
     return !addNewChat? (
@@ -43,8 +49,9 @@ function SidebarChat({ id,name,addNewChat}){
                 <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
                 <div className="sidebarChat_info">
                     <h2>{name}</h2>
-                    <p>{messages[0]?.message.substring(0, 30)}</p>
+                    <p>{messages[0]?.message}</p>
                     {/* <p>{messages[0]?.message}</p> */}
+                    <Button onClick={deleteRoom}>Delete</Button>
                 </div>
             </div>
         </Link>

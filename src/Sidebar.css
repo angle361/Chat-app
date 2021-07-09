@@ -1,6 +1,6 @@
 .sidebar{
     display: flex;
-    flex: 0.35;
+    flex: 0.30;
     flex-direction: column;
 }
 .sidebar_header{
@@ -48,4 +48,10 @@
     flex: 1;
     background-color: white;
     overflow: scroll;
+}
+
+@media (max-width: 786px) {
+    .sidebar{
+        flex: 0.65;
+    }
 }
