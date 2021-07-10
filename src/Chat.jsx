@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './Chat.css';
 import { Avatar, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
@@ -14,7 +14,9 @@ import firebase from "firebase";
 import Picker from 'emoji-picker-react';
 import { useMediaQuery } from 'react-responsive';
 import Compressor from 'compressorjs';
-import {storage } from './Firebase';
+import { storage } from './Firebase';
+import { Link } from "react-router-dom";
+
 function Chat() {
 
     const [seed, setSeed] = useState("");
@@ -25,9 +27,8 @@ function Chat() {
     const [{ user }, dispatch] = useStateValue();
     const [emoji, setEmoji] = useState(false);
     const [chosenEmoji, setChosenEmoji] = useState(null);
-    const [src, setSRC] = useState('');
     const [image, setImage] = useState(null);
-
+    const [src, setSRC] = useState('');
     useEffect(() => {
         if (roomId) {
             db.collection('rooms').doc(roomId)
@@ -55,8 +56,8 @@ function Chat() {
             name: user.displayName,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
-
         setInput("");
+        updateScroll();
     }
     // send emoji
     function showEmoji() {
@@ -71,7 +72,7 @@ function Chat() {
         setChosenEmoji(emojiObject); setInput(input + chosenEmoji.emoji);
     }
 
-   ////////////////////////// //send pic//////////////////////////////
+    ////////////////////////// //send pic//////////////////////////////
     const handleFile = event => {
         if (window.navigator.onLine) {
             if (event.target.files[0]) {
@@ -90,28 +91,36 @@ function Chat() {
         var split, imageName;
         if (image) {
             split = image.name.split(".");
-            imageName = split[0] + Math.floor(Math.random()*1000) + "." + split[1];
+            imageName = split[0] + Math.floor(Math.random() * 1000) + "." + split[1];
         }
-        new Compressor(image, { quality: 0.8, maxWidth: 1920, async success(result) {
-            setSRC("");
-            setImage(null);
-            await storage.child(imageName).put(result);
-            const url = await storage.child(imageName).getDownloadURL();
-            db.collection("rooms").doc(roomId).collection("messages").add(
-            {
-                imageUrl: url,
-                name: user.displayName,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-        }});
+        new Compressor(image, {
+            quality: 0.8, maxWidth: 1920, async success(result) {
+                setImage(null);
+                await storage.child(imageName).put(result);
+                const url = await storage.child(imageName).getDownloadURL();
+                db.collection("rooms").doc(roomId).collection("messages").add(
+                    {
+                        imageUrl: url,
+                        name: user.displayName,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    });
+            }
+        });
     };
     //////////////////////////////////////////////////////////////////////////////
+    function updateScroll(){
+        var element = document.getElementById("chat_body");
+        element.scrollTop = element.scrollHeight;
+        console.log("fff");
+    }
+  
     const isMobile = useMediaQuery({
         query: '(max-device-width: 768px)'
     });
     return roomName ? (
         <div className="chat">
             <div className="chat_header">
+                <Link to="/"><ArrowBack /></Link>
                 <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
 
                 <div className="chat_headerInfo">
@@ -133,18 +142,18 @@ function Chat() {
                     <IconButton><MoreVertIcon /></IconButton>
                 </div>
             </div>
-            <div className="chat_body">
+            <div id="chat_body" className="chat_body">
                 {messages.map((message) => (
                     <p className={`chat_message ${message.name === user.displayName && 'chat_receiver'} `}>
                         <span className="chat_name">{message.name}</span>
                         <div className="chat_message_info">
-                            {!message.imageUrl? message.message
-                              :
-                              <div style={{height:"50px"}}>
-                                  <img src={message.imageUrl} alt="img" style={{height:"50px"}}/>
-                              </div>
+                            {!message.imageUrl ? message.message
+                                :
+                                <div style={{ height: "50px" }}>
+                                    <img src={message.imageUrl} alt="img" style={{ height: "50px" }} />
+                                </div>
                             }
-                           
+                          
                         </div>
 
                         <span className="chat_timestamp">

@@ -4,7 +4,8 @@ import { Avatar, IconButton } from "@material-ui/core";
 import db from './Firebase';
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
-
+import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
+import CancelRoundedIcon from '@material-ui/icons/CancelRounded';
 
 function SidebarChat({ id,name,addNewChat}){
 
@@ -42,7 +43,7 @@ function SidebarChat({ id,name,addNewChat}){
         }
     }
 
-   // console.log(name);
+   console.log(name);
     return !addNewChat? (
         <Link to={`/rooms/${id}`}>
             <div className="sidebarChat">
@@ -51,15 +52,19 @@ function SidebarChat({ id,name,addNewChat}){
                     <h2>{name}</h2>
                     <p>{messages[0]?.message}</p>
                     {/* <p>{messages[0]?.message}</p> */}
-                    <Button onClick={deleteRoom}>Delete</Button>
+                    <Button className = "btn-1" onClick={deleteRoom}><CancelRoundedIcon /></Button>
                 </div>
             </div>
         </Link>
+        
     ):(
-        <div onClick={createChat} className="sidebarChat">
-                <h2>Add new Chat</h2>
+        <div onClick={createChat}>
+                {/* <h2>Add new Chat</h2> */}
+                <Button className = "btn-2" onClick={createChat} style={{position:"absolute",bottom:"50px",right:"20px",color:"green"}}><AddCircleRoundedIcon /></Button>
         </div>
     );
+
+  
 
 }
 

@@ -33,19 +33,21 @@ function App() {
 
       :
       <div>
-      {user? (
+      {!user? (
         <h1><Login /></h1>
       ) : (
         <div className="app_body">
           <Router>
-          <Sidebar />
+          
             <Switch>
-              <Route path="/rooms/:roomId">
+            <Route path="/" exact >
+              <Sidebar />
+                {/* <Chat /> */}
+              </Route>
+              <Route exact path="/rooms/:roomId">
                 <Chat />
               </Route>
-              <Route path="/">
-                <Chat />
-              </Route>
+              
             </Switch>
           </Router>
         </div>

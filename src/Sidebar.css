@@ -1,5 +1,6 @@
 .sidebar{
     display: flex;
+    position: relative;
     flex: 0.30;
     flex-direction: column;
 }
@@ -50,8 +51,8 @@
     overflow: scroll;
 }
 
-@media (max-width: 786px) {
+@media only screen and (max-width: 768px) {
     .sidebar{
-        flex: 0.65;
+        flex: 1;
     }
 }

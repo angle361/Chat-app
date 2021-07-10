@@ -13,8 +13,12 @@
     margin-bottom: 8px;
 
 }
-Button{
-    display:none;
+.btn-1{
+    display:none !important;
+}
+.btn-1:hover{
+    display: visible !important;
+    color:tomato;
 }
 .sidebarChat_info{
     margin-left: 15px;
@@ -22,4 +26,7 @@ Button{
 a {
     text-decoration: none !important;
     color: black;
+}
+.btn-2{
+    transform: scale(2);
 }
