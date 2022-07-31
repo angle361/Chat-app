@@ -1,6 +1,6 @@
 import "./SidebarChat.css";
 import React, { useEffect, useState } from 'react';
-import { Avatar, IconButton } from "@material-ui/core";
+import { Avatar} from "@material-ui/core";
 import db from './Firebase';
 import { Link } from "react-router-dom";
 import { Button } from "@material-ui/core";
@@ -28,13 +28,12 @@ function SidebarChat({ id,name,addNewChat}){
 
     const createChat = () => {
         var roomName= prompt("Type room name");
+        
         if(roomName){
             //databse
-            if (roomName) {
-                db.collection('rooms').add({
-                    name: roomName,
-                });
-            }
+            db.collection('rooms').add({
+                name: roomName,
+            });
         }
     }
     const deleteRoom = () => {
@@ -43,7 +42,7 @@ function SidebarChat({ id,name,addNewChat}){
         }
     }
 
-   console.log(name);
+//    console.log(name);
     return !addNewChat? (
         <Link to={`/rooms/${id}`}>
             <div className="sidebarChat">
@@ -58,9 +57,9 @@ function SidebarChat({ id,name,addNewChat}){
         </Link>
         
     ):(
-        <div onClick={createChat}>
+        <div>
                 {/* <h2>Add new Chat</h2> */}
-                <Button className = "btn-2" onClick={createChat} style={{position:"absolute",bottom:"50px",right:"20px",color:"green"}}><AddCircleRoundedIcon /></Button>
+            <Button className = "btn-2" onClick={createChat} style={{position:"absolute",bottom:"50px",right:"20px",color:"green"}}><AddCircleRoundedIcon /></Button>
         </div>
     );
 

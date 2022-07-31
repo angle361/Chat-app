@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState} from 'react';
 import './Chat.css';
 import { Avatar, IconButton } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
+// import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { AddPhotoAlternate, MoreVert, DoneAllRounded, ArrowDownward, ArrowBack } from '@material-ui/icons';
+import { AddPhotoAlternate, ArrowBack } from '@material-ui/icons';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
 import MicIcon from '@material-ui/icons/Mic';
 import { useParams } from 'react-router-dom';
@@ -29,13 +29,20 @@ function Chat() {
     const [chosenEmoji, setChosenEmoji] = useState(null);
     const [image, setImage] = useState(null);
     const [src, setSRC] = useState('');
+
+
     useEffect(() => {
         if (roomId) {
+        
             db.collection('rooms').doc(roomId)
-                .onSnapshot(snapshot => (
-                    setRoomName(snapshot.data().name)
-                ));
-
+                .onSnapshot(snapshot => {
+                    if(snapshot.data()){
+                       setRoomName(snapshot.data().name)
+                    }else{
+                        setRoomName("");
+                    }
+                });
+            
             db.collection("rooms").doc(roomId).collection("messages")
                 .orderBy("timestamp", 'asc').onSnapshot((snapshot) =>
                     setMessages(snapshot.docs.map((doc) => doc.data())));
@@ -47,6 +54,12 @@ function Chat() {
         var x = Math.floor(Math.random() * 5000);
         setSeed(x);
     }, [roomId]);
+
+    function updateScroll(){
+        var element = document.getElementById("chat_body");
+        element.scrollTop = element.scrollHeight;
+        // console.log("fff");
+    }
 
     function sendMessage(e) {
         e.preventDefault();
@@ -74,6 +87,7 @@ function Chat() {
 
     ////////////////////////// //send pic//////////////////////////////
     const handleFile = event => {
+        
         if (window.navigator.onLine) {
             if (event.target.files[0]) {
                 var reader = new FileReader();
@@ -89,34 +103,33 @@ function Chat() {
     };
     if (image) {
         var split, imageName;
-        if (image) {
-            split = image.name.split(".");
-            imageName = split[0] + Math.floor(Math.random() * 1000) + "." + split[1];
-        }
+        
+        split = image.name.split(".");
+        imageName = split[0] + Math.floor(Math.random() * 1000) + "." + split[1];
+        
+        
         new Compressor(image, {
             quality: 0.8, maxWidth: 1920, async success(result) {
                 setImage(null);
                 await storage.child(imageName).put(result);
                 const url = await storage.child(imageName).getDownloadURL();
+
                 db.collection("rooms").doc(roomId).collection("messages").add(
                     {
                         imageUrl: url,
                         name: user.displayName,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    });
+                    }
+                );
             }
         });
     };
     //////////////////////////////////////////////////////////////////////////////
-    function updateScroll(){
-        var element = document.getElementById("chat_body");
-        element.scrollTop = element.scrollHeight;
-        console.log("fff");
-    }
+    
   
-    const isMobile = useMediaQuery({
-        query: '(max-device-width: 768px)'
-    });
+    // const isMobile = useMediaQuery({
+    //     query: '(max-device-width: 768px)'
+    // });
     return roomName ? (
         <div className="chat">
             <div className="chat_header">
@@ -127,7 +140,7 @@ function Chat() {
                     <h3>{roomName}</h3>
                     <p>
                         last on{" "}
-                        {new Date(messages[messages.length - 1]?.timestamp?.toDate()).toUTCString()}
+                        {new Date(messages[messages.length - 1]?.timestamp?.toDate()).toString().slice(0,-30)}
                     </p>
                 </div>
                 <div className="chat_headerRight">
@@ -157,7 +170,7 @@ function Chat() {
                         </div>
 
                         <span className="chat_timestamp">
-                            {new Date(message.timestamp?.toDate()).toUTCString()}
+                            {new Date(message.timestamp?.toDate()).toString().slice(0,-30)}
                         </span>
                     </p>
                 ))}

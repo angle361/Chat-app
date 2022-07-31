@@ -13,13 +13,13 @@
     margin-bottom: 8px;
 
 }
-.btn-1{
-    display:none !important;
+/* .btn-1{
+    display: none !important;
 }
 .btn-1:hover{
     display: visible !important;
     color:tomato;
-}
+} */
 .sidebarChat_info{
     margin-left: 15px;
 }
