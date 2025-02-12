@@ -1,3 +1,1 @@
-# Let's Chat
-
-[# Let's Chat 🚀](https://chat-app-8024f.firebaseapp.com/)
+# [Let's Chat 🚀](https://chat-app-8024f.firebaseapp.com/)
